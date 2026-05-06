@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Solar Monitoring Graphs</title>    
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+       
+</head>
+<body> 
+    <link rel="stylesheet" href="./SOLGENX_GRAPH.css"/>
+
+<h1>Solar Monitoring Graph Dashboard</h1>
+
+<div class="chart-container">
+     <canvas id="powerChart"></canvas>
+</div>
+
+<div class="chart-container">
+    <canvas id="tempChart"></canvas>
+</div>
+
+<div class="chart-container">
+    <canvas id="batteryChart"></canvas>
+</div>
+
+<div class="chart-container">
+    <canvas id="humidityChart"></canvas>
+</div>
+
+<script>
+
+     // Simulated CSV history (multiple readings)
+    let time = [1500, 1550, 1600, 1650, 1700];
+    let power = [3.5, 3.8, 4.0, 4.2, 4.5];
+    let temperature = [30, 31, 31.5, 32, 33];
+    let battery = [3.6, 3.65, 3.7, 3.8, 3.85];
+    let humidity = [70, 68, 66, 65, 64];
+
+    // Power vs Time
+    new Chart(document.getElementById("powerChart"), {
+        type: "line",
+        data: {
+            labels: time,
+            datasets: [{
+                label: "Power (W)",
+                data: power,
+                borderWidth: 4                         
+                
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    grid: {
+                        lineWidth: 5   // Increase thickness here
+                    }
+                },
+                y: {
+                    grid: {
+                        lineWidth: 5   // Increase thickness here
+                    }
+                }
+            }
+        } 
+    });
+
+    // Temperature vs Time
+    new Chart(document.getElementById("tempChart"), {
+        type: "line",
+        data: {
+            labels: time,
+            datasets: [{
+                label: "Temperature (°C)",
+                data: temperature,
+                borderWidth: 4
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    grid: {
+                        lineWidth: 5   // Increase thickness here
+                    }
+                },
+                y: {
+                    grid: {
+                        lineWidth: 5   // Increase thickness here
+                    }
+                }
+            }
+        }
+    });
+
+    // Battery Voltage vs Time
+    new Chart(document.getElementById("batteryChart"), {
+        type: "line",
+        data: {
+            labels: time,
+            datasets: [{
+                label: "Battery Voltage (V)",
+                data: battery,
+                borderWidth: 4
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    grid: {
+                        lineWidth: 5   // Increase thickness here
+                    }
+                },
+                y: {
+                    grid: {
+                        lineWidth: 5   // Increase thickness here
+                    }
+                }
+            }
+        }
+    });
+
+    // Humidity vs Time
+    new Chart(document.getElementById("humidityChart"), {
+        type: "line",
+        data: {
+            labels: time,
+            datasets: [{
+                label: "Humidity (%)",
+                data: humidity,
+                borderWidth: 4
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    grid: {
+                        lineWidth: 5   // Increase thickness here
+                    }
+                },
+                y: {
+                    grid: {
+                        lineWidth: 5   // Increase thickness here
+                    }
+                }
+            }
+        }
+
+    });
+
+    </script>
+
+</body>
+</html>
+
+   
+
+
+
+
+
+   
+

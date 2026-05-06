@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SolGenX AI Solar Dashboard</title>
+
+<link rel="stylesheet" href="SOLGENX.css">
+<link rel="stylesheet" href="AI_Bot.css">
+
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script defer src="SOLGENX.js"></script>
+
+</head>
+
+<body>
+
+<!-- =====================================
+     STARTUP LOADER
+===================================== -->
+<div id="introScreen">
+    <div class="sun-system">
+        <div class="sun-core"></div>
+        <div class="sun-ring"></div>
+        <div class="sun-ring2"></div>
+    </div>
+
+    <h2>Initializing SolGenX...</h2>
+    <p>AI Solar Tracking System Booting</p>
+
+    <div class="loading-bar">
+        <div class="loading-fill"></div>
+    </div>
+</div>
+
+<!-- =====================================
+     BACKGROUND FX
+===================================== -->
+<div class="stars"></div>
+<div class="grid-bg"></div>
+
+<!-- =====================================
+     HEADER
+===================================== -->
+<header>
+<h1>SOLGENX AI SOLAR COMMAND CENTER</h1>
+<p>Smart Tracking • Weather AI • Energy Analytics</p>
+</header>
+
+<!-- =====================================
+     DASHBOARD
+===================================== -->
+<section class="dashboard">
+
+    <!-- ROW 1 -->
+    <div class="card">
+        <div class="title">Solar Voltage</div>
+        <div class="value" id="solarVoltage">--</div>
+    </div>
+
+    <div class="card">
+        <div class="title">Battery Voltage</div>
+        <div class="value" id="battery">--</div>
+    </div>
+
+    <div class="card">
+        <div class="title">Current</div>
+        <div class="value" id="current">--</div>
+    </div>
+
+    <div class="card">
+        <div class="title">Power</div>
+        <div class="value" id="power">--</div>
+    </div>
+
+    <!-- ROW 2 (SOLAR + TRACKER FIXED TITLES) -->
+    <div class="card">
+        <div class="title">Solar Horizontal Position</div>
+        <div class="value" id="sunAzimuth">--</div>
+    </div>
+
+    <div class="card">
+        <div class="title">Solar Vertical Position</div>
+        <div class="value" id="sunElevation">--</div>
+    </div>
+
+    <div class="card">
+        <div class="title">Tracker Horizontal Position</div>
+        <div class="value" id="azimuth">--</div>
+    </div>
+
+    <div class="card">
+        <div class="title">Tracker Vertical Position</div>
+        <div class="value" id="elevation">--</div>
+    </div>
+
+    <!-- ROW 3 -->
+    <div class="card">
+        <div class="title">Temperature</div>
+        <div class="value" id="temp">--</div>
+    </div>
+
+    <div class="card">
+        <div class="title">Humidity</div>
+        <div class="value" id="humidity">--</div>
+    </div>
+
+    <div class="card">
+        <div class="title">Weather Status</div>
+        <div class="value" id="weather">--</div>
+    </div>
+
+    <div class="card mode">
+        <div class="title">Power Mode</div>
+        <div class="value" id="mode">AUTO</div>
+    </div>
+
+</section>
+
+<!-- =====================================
+     LIVE SUN PANEL (FIXED)
+===================================== -->
+<section class="chart-section">
+
+<h2 class="chart-title">Live Sun Position</h2>
+
+<div class="sun-panel">
+
+    <div class="sun-row">☀️ Solar Tracking Overview</div>
+
+    <!-- SOLAR -->
+    <div class="sun-row solar">
+        Solar Horizontal :
+        <span id="sunAzimuthBig">--</span>
+    </div>
+
+    <div class="sun-row solar">
+        Solar Vertical :
+        <span id="sunElevationBig">--</span>
+    </div>
+
+    <!-- TRACKER -->
+    <div class="sun-row tracker">
+        Tracker Horizontal :
+        <span id="azimuthBig">--</span>
+    </div>
+
+    <div class="sun-row tracker">
+        Tracker Vertical :
+        <span id="elevationBig">--</span>
+    </div>
+
+</div>
+
+</section>
+
+<!-- =====================================
+     BOT
+===================================== -->
+<div id="botBtn">🤖</div>
+
+<section id="chatBox">
+
+<div id="chatContent">
+AI Ready... Waiting for commands.
+</div>
+
+<div class="button-row">
+
+<button onclick="connectSerial()">Connect Arduino</button>
+<button onclick="analyzeData()">Analyze</button>
+<button onclick="showWeather()">Weather Scan</button>
+
+</div>
+
+</section>
+
+<!-- =====================================
+     CHART
+===================================== -->
+<section class="chart-section">
+
+<h2 class="chart-title">Live Solar Performance</h2>
+
+<canvas id="solarChart"></canvas>
+
+</section>
+
+<!-- =====================================
+     LOADER SCRIPT
+===================================== -->
+<script>
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        const intro = document.getElementById("introScreen");
+        if (intro) intro.style.display = "none";
+    }, 2500);
+});
+</script>
+
+</body>
+</html>

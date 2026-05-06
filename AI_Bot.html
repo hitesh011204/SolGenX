@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Solar Monitoring Dashboard - SolGenX</title>
+
+<link rel="stylesheet" href="SOLGENX.css">
+<link rel="stylesheet" href="AI_Bot.css">
+
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<h1 id="header">Solar Tracking And Monitoring Dashboard</h1>
+
+<center>
+<div class="dashboard">
+
+    <div class="card"><div class="title">TimeStamp</div><div class="value" id="time">--</div></div>
+    <div class="card"><div class="title">Azimuth</div><div class="value" id="azimuth">--</div></div>
+    <div class="card"><div class="title">Elevation</div><div class="value" id="elevation">--</div></div>
+    <div class="card"><div class="title">Current</div><div class="value" id="current">--</div></div>
+    <div class="card"><div class="title">Power</div><div class="value" id="power">--</div></div>
+    <div class="card"><div class="title">Battery Voltage</div><div class="value" id="battery">--</div></div>
+
+    <div class="card"><div class="title">Temperature</div><div class="value" id="temp">--</div></div>
+    <div class="card"><div class="title">Humidity</div><div class="value" id="humidity">--</div></div>
+    <div class="card"><div class="title">Weather</div><div class="value" id="weather">--</div></div>
+    <div class="card"><div class="title">Wind Speed</div><div class="value" id="wind">--</div></div>
+
+    <div class="card mode"><div class="title">Power Mode</div><div class="value" id="mode">AUTO</div></div>
+
+</div>
+</center>
+
+<!-- AI BUTTON -->
+<div id="botBtn">🤖</div>
+
+<!-- AI BOX -->
+<div id="chatBox">
+
+    <div id="chatContent">AI Ready... Waiting for commands.</div>
+
+    <button id="connectBtn">Connect Arduino</button>
+    <button id="analyzeBtn">Analyze</button>
+    <button id="weatherBtn">Weather Scan</button>
+
+</div>
+
+<script>
+// ==============================
+// LOCATION
+// ==============================
+const LAT = 12.895307;
+const LON = 77.627810;
+
+// ==============================
+// GLOBALS
+// ==============================
+let weatherStatus = "--";
+let temperature = 0;
+let humidityValue = 0;
+let windSpeed = 0;
+
+// ==============================
+// SAFE DOM HELPER
+// ==============================
+function set(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.innerText = val;
+}
+
+// ==============================
+// CLOCK
+// ==============================
+function updateTime() {
+    set("time", new Date().toLocaleString());
+}
+setInterval(updateTime, 1000);
+updateTime();
+
+// ==============================
+// WEATHER
+// ==============================
+async function getWeather() {
+
+    try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,cloud_cover,precipitation`;
+
+        const res = await fetch(url);
+        const data = await res.json();
+        const c = data.current;
+
+        temperature = c.temperature_2m;
+        humidityValue = c.relative_humidity_2m;
+        windSpeed = c.wind_speed_10m;
+
+        set("temp", temperature + " °C");
+        set("humidity", humidityValue + " %");
+        set("wind", windSpeed + " km/h");
+
+        if (c.precipitation > 0) weatherStatus = "Rain";
+        else if (c.cloud_cover > 75) weatherStatus = "Cloudy";
+        else if (c.cloud_cover > 35) weatherStatus = "Partly Cloudy";
+        else weatherStatus = "Clear";
+
+        set("weather", weatherStatus);
+
+    } catch (e) {
+        weatherStatus = "Offline";
+        set("weather", "Offline");
+    }
+}
+
+getWeather();
+setInterval(getWeather, 60000);
+
+// ==============================
+// CHAT
+// ==============================
+function typeText(text) {
+    document.getElementById("chatContent").innerHTML =
+        text.replace(/\n/g, "<br>");
+}
+
+// ==============================
+// WEATHER BUTTON
+// ==============================
+function showWeather() {
+
+    typeText(
+`🌦 WEATHER REPORT
+
+Condition : ${weatherStatus}
+Temperature : ${temperature} °C
+Humidity : ${humidityValue} %
+Wind Speed : ${windSpeed} km/h
+
+🤖 AI DECISION:
+${weatherStatus === "Rain" ? "Rain detected → Safe mode" :
+weatherStatus === "Cloudy" ? "Low solar output" :
+"Maximum efficiency"}
+
+${windSpeed > 20 ? "\nHigh wind → Lock panel advised" : ""}`
+    );
+}
+
+// ==============================
+// ANALYZE BUTTON (FIXED)
+// ==============================
+function analyzeData() {
+
+    typeText(
+`🤖 SOLGENX AI ANALYSIS
+
+🌦 Weather: ${weatherStatus}
+🌡 Temperature: ${temperature} °C
+💨 Wind: ${windSpeed} km/h
+
+Status:
+${weatherStatus === "Clear" ? "✔ High solar output" : "⚠ Variable conditions"}
+
+System: OK`
+    );
+}
+
+// ==============================
+// CONNECT ARDUINO
+// ==============================
+async function connectSerial() {
+
+    try {
+        if (!navigator.serial) {
+            typeText("❌ Serial not supported");
+            return;
+        }
+
+        const port = await navigator.serial.requestPort();
+        await port.open({ baudRate: 9600 });
+
+        typeText("✅ Arduino Connected");
+
+    } catch {
+        typeText("❌ Connection Failed");
+    }
+}
+
+// ==============================
+// 🔥 FIXED BUTTON BINDING (IMPORTANT)
+// ==============================
+window.onload = function () {
+
+    document.getElementById("connectBtn")
+        .addEventListener("click", connectSerial);
+
+    document.getElementById("analyzeBtn")
+        .addEventListener("click", analyzeData);
+
+    document.getElementById("weatherBtn")
+        .addEventListener("click", showWeather);
+
+    document.getElementById("botBtn")
+        .addEventListener("click", () => {
+            const box = document.getElementById("chatBox");
+            box.style.display =
+                box.style.display === "block" ? "none" : "block";
+        });
+};
+
+</script>
+
+</body>
+</html>

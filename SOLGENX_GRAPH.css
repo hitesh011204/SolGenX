@@ -1,0 +1,20 @@
+h1{
+        color: #003049;
+        background-color: #5478FF;
+        display: inline-block;  
+        border-radius: 10px;          
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #EDDCC6;
+            text-align: center;
+        }
+
+        .chart-container {
+            width: 700px;
+            margin: 30px auto;
+            border: 2px solid black;
+            animation-timing-function: linear;
+            animation-delay: 0s;
+            animation-direction: normal;
+        }
